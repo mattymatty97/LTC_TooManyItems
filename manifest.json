@@ -1,0 +1,9 @@
+{
+  "name": "TooManyItems",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/mattymatty97/LTC_TooManyItems",
+  "description": "Remove limits to amount of items in a lobby",
+  "dependencies": [
+    "BepInEx-BepInExPack-5.4.2100"
+  ]
+}
