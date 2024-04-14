@@ -2,8 +2,10 @@ TooManyItems
 ============
 [![Thunderstore Downloads](https://img.shields.io/thunderstore/dt/mattymatty/TooManyItems?style=flat&logo=thunderstore&logoColor=white&label=thunderstore)](https://thunderstore.io/c/lethal-company/p/mattymatty/TooManyItems/)
 
-Standalone version of [Lobby Control](https://thunderstore.io/c/lethal-company/p/mattymatty/LobbyControl/) ItemLimit  
-and [Matty's Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) OutOfBounds
+Standalone version of ItemLimit from [Lobby Control](https://thunderstore.io/c/lethal-company/p/mattymatty/LobbyControl/),
+OutOfBounds and RadarPatches from [Matty's Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/)
+
+### Host Fixes:
 
 - ### ItemLimit
   - **removed** limit on amount of items that can be saved  
@@ -13,8 +15,13 @@ and [Matty's Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_
 - ### OutOfBounds Patch
   - prevent items from falling **below of the ship**
 
-**This mod is 100% Vanilla Compatible** and does not change any of the vanilla gameplay.
-only **the host** needs this mod installed
+### Client Fixes:
+
+- ### Radar Patches
+  - properly mark as collected existing items upon joining a lobby
+
+**This mod is 100% Vanilla Compatible** and does not change any of the vanilla gameplay.  
+only **the host** needs this mod installed ( client fixes will only apply to clients with the mod )
 
 Differences to [MoreItems](https://thunderstore.io/c/lethal-company/p/Drakorle/MoreItems/)
 ------------------------

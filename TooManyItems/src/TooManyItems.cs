@@ -38,6 +38,7 @@ namespace TooManyItems
                     {
                         harmony.PatchAll(typeof(GrabbableObjectUtility));
                         harmony.PatchAll(typeof(OutOfBoundsItemsFix));
+                        harmony.PatchAll(typeof(RehostItemFixes));
                     }
                     Log.LogInfo(NAME + " v" + VERSION + " Loaded!");
                     if (AsyncLoggerProxy.Enabled)
