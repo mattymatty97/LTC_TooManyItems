@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using GameNetcodeStuff;
+using HarmonyLib;
 using Unity.Netcode;
 
 namespace TooManyItems.Patches;
@@ -7,6 +8,8 @@ namespace TooManyItems.Patches;
 internal class RehostItemFixes
 {
 
+    private static bool fullyLoaded = false;
+    
     [HarmonyPrefix]
     [HarmonyPatch(typeof(NetworkBehaviour), nameof(NetworkBehaviour.OnNetworkSpawn))]
     private static void OnNetworkSpawn(NetworkBehaviour __instance)
@@ -15,8 +18,7 @@ internal class RehostItemFixes
         if( grabbable == null)
             return;
 
-        var startOfRound = StartOfRound.Instance;
-        if (GameNetworkManager.Instance.gameHasStarted || !startOfRound.inShipPhase)
+        if (fullyLoaded)
             return;
 
         grabbable.isInElevator = true;
@@ -36,6 +38,30 @@ internal class RehostItemFixes
         
         if (grabbable.radarIcon != null)
             UnityEngine.Object.Destroy(grabbable.radarIcon.gameObject);
+    }
+    
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.ConnectClientToPlayerObject))]
+    private static void OnFinishedLoading()
+    {
+        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} player fully loaded! {fullyLoaded}");
+        fullyLoaded = true;
+    }
+    
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnLocalDisconnect))]
+    private static void OnDisconnect()
+    {
+        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} reset1! {fullyLoaded}");
+        fullyLoaded = false;
+    }
+    
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnDestroy))]
+    private static void OnDestroy()
+    {
+        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} reset2! {fullyLoaded}");
+        fullyLoaded = false;
     }
     
 }

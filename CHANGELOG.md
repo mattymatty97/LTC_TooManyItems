@@ -1,3 +1,5 @@
+## v1.1.1
+- use different logic on clients to mark items as collected on join
 
 ## v1.1.0
 - RadarPatches from [Matty's Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/)
