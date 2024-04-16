@@ -1,3 +1,6 @@
+## v1.1.2
+- do not touch stickyNote nor clipboard manual
+
 ## v1.1.1
 - use different logic on clients to mark items as collected on join
 

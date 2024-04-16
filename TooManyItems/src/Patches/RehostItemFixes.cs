@@ -8,17 +8,21 @@ namespace TooManyItems.Patches;
 internal class RehostItemFixes
 {
 
-    private static bool fullyLoaded = false;
+    private static bool _fullyLoaded = false;
     
     [HarmonyPrefix]
     [HarmonyPatch(typeof(NetworkBehaviour), nameof(NetworkBehaviour.OnNetworkSpawn))]
     private static void OnNetworkSpawn(NetworkBehaviour __instance)
     {
+        if (__instance.transform.name == "ClipboardManual" || __instance.transform.name == "StickyNoteItem")
+            return;
+        
         var grabbable = __instance as GrabbableObject;
         if( grabbable == null)
             return;
+        
 
-        if (fullyLoaded)
+        if (_fullyLoaded)
             return;
 
         grabbable.isInElevator = true;
@@ -44,24 +48,24 @@ internal class RehostItemFixes
     [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.ConnectClientToPlayerObject))]
     private static void OnFinishedLoading()
     {
-        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} player fully loaded! {fullyLoaded}");
-        fullyLoaded = true;
+        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} player fully loaded! {_fullyLoaded}");
+        _fullyLoaded = true;
     }
     
     [HarmonyPrefix]
     [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnLocalDisconnect))]
     private static void OnDisconnect()
     {
-        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} reset1! {fullyLoaded}");
-        fullyLoaded = false;
+        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} reset1! {_fullyLoaded}");
+        _fullyLoaded = false;
     }
     
     [HarmonyPrefix]
     [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnDestroy))]
     private static void OnDestroy()
     {
-        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} reset2! {fullyLoaded}");
-        fullyLoaded = false;
+        TooManyItems.Log.LogDebug($"{nameof(RehostItemFixes)} reset2! {_fullyLoaded}");
+        _fullyLoaded = false;
     }
     
 }
