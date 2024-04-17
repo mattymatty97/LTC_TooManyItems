@@ -1,5 +1,7 @@
 ## v1.1.2
 - do not touch stickyNote nor clipboard manual
+- only check OutOfBounds on load and on ship departure
+- remove packet size limit for scrap value sync
 
 ## v1.1.1
 - use different logic on clients to mark items as collected on join

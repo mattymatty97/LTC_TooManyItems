@@ -14,7 +14,7 @@ internal class RehostItemFixes
     [HarmonyPatch(typeof(NetworkBehaviour), nameof(NetworkBehaviour.OnNetworkSpawn))]
     private static void OnNetworkSpawn(NetworkBehaviour __instance)
     {
-        if (__instance.transform.name == "ClipboardManual" || __instance.transform.name == "StickyNoteItem")
+        if (__instance.transform.name is "ClipboardManual" or "StickyNoteItem")
             return;
         
         var grabbable = __instance as GrabbableObject;
