@@ -19,6 +19,9 @@ internal class OutOfBoundsItemsFix
         if (__instance is not GrabbableObject obj)
             return;
 
+        if (obj is ClipboardItem || (obj is PhysicsProp && obj.itemProperties.itemName == "Sticky note"))
+            continue;
+
         if (!obj.isInShipRoom && !StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(__instance.transform.position))
             return;
             
