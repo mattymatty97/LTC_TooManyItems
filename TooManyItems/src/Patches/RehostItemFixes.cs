@@ -14,15 +14,14 @@ internal class RehostItemFixes
     [HarmonyPatch(typeof(NetworkBehaviour), nameof(NetworkBehaviour.OnNetworkSpawn))]
     private static void OnNetworkSpawn(NetworkBehaviour __instance)
     {
-        if (__instance.transform.name is "ClipboardManual" or "StickyNoteItem")
-            return;
-        
-        var grabbable = __instance as GrabbableObject;
-        if( grabbable == null)
-            return;
-        
-
         if (_fullyLoaded)
+            return;
+
+        var grabbable = __instance as GrabbableObject;
+        if(grabbable == null)
+            return;
+
+        if (grabbable is ClipboardItem || (grabbable is PhysicsProp && grabbable.itemProperties.itemName == "Sticky note"))
             return;
 
         grabbable.isInElevator = true;
@@ -37,7 +36,7 @@ internal class RehostItemFixes
     private static void OnDestroy(NetworkBehaviour __instance)
     {
         var grabbable = __instance as GrabbableObject;
-        if( grabbable == null)
+        if(grabbable == null)
             return;
         
         if (grabbable.radarIcon != null)
