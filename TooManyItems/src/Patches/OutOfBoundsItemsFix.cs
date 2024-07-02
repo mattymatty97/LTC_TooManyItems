@@ -38,7 +38,7 @@ internal class OutOfBoundsItemsFix
         var closet = GameObject.Find("/Environment/HangarShip/StorageCloset");
         var transform = __instance.transform;
 
-        if (transform.parent != closet.transform)
+        if (closet == null || transform.parent != closet.transform)
         {
             var position = updateHolder.OriginalPos;
             position += Vector3.down * Math.Min(0, __instance.itemProperties.verticalOffset);
@@ -67,8 +67,12 @@ internal class OutOfBoundsItemsFix
 
         foreach (var item in objectsOfType)
         {
+            if (item is ClipboardItem || (item is PhysicsProp && item.itemProperties.itemName == "Sticky note"))
+                continue;
+
             if (!item.isInShipRoom)
                 continue;
+
             var transform = item.transform;
             if (transform.position.y < collider.bounds.min.y)
             {
