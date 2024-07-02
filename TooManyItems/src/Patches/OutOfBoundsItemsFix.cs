@@ -20,7 +20,7 @@ internal class OutOfBoundsItemsFix
             return;
 
         if (obj is ClipboardItem || (obj is PhysicsProp && obj.itemProperties.itemName == "Sticky note"))
-            continue;
+            return;
 
         if (!obj.isInShipRoom && !StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(__instance.transform.position))
             return;
