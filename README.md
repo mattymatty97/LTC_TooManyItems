@@ -11,7 +11,7 @@ OutOfBounds and RadarPatches from [Matty's Fixes](https://thunderstore.io/c/leth
   - **removed** limit on amount of items that can be saved  
     ( vanilla = 45 )
   - **removed** limit to amount of scrap that can be synchronized  
-    ( vanilla = 250 )
+    ( vanilla = 500 )
 - ### OutOfBounds Patch
   - prevent items from falling **below of the ship**
 

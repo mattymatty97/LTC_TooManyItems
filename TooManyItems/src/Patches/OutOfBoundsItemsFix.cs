@@ -41,7 +41,7 @@ internal class OutOfBoundsItemsFix
         if (transform.parent != closet.transform)
         {
             var position = updateHolder.OriginalPos;
-            position += Vector3.down * Math.Min(0, __instance.itemProperties.verticalOffset);
+            position += Vector3.up * (-Math.Min(0, __instance.itemProperties.verticalOffset) + 0.2f);
                 
             if (position.y < collider.bounds.min.y)
                 position = collider.bounds.center;

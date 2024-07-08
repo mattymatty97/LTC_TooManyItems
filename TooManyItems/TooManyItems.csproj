@@ -4,7 +4,7 @@
         <RootNamespace>TooManyItems</RootNamespace>
         <AssemblyName>TooManyItems</AssemblyName>
         <Product>Lobby Control</Product>
-        <Version>1.1.2</Version>
+        <Version>1.2.0</Version>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>Latest</LangVersion>
     </PropertyGroup>

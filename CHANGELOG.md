@@ -1,7 +1,12 @@
+## v1.2.0
+- update patches for v56
+
 ## v1.1.2
-- do not touch stickyNote nor clipboard manual
+- do not touch stickyNote nor clipboard manual ( thanks to @1a3 )
 - only check OutOfBounds on load and on ship departure
 - remove packet size limit for scrap value sync
+- fix radar icons still showing for scrap in ship
+- hopefully fix lamps falling below the ship
 
 ## v1.1.1
 - use different logic on clients to mark items as collected on join

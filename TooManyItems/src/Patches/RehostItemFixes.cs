@@ -32,6 +32,14 @@ internal class RehostItemFixes
             UnityEngine.Object.Destroy(grabbable.radarIcon.gameObject);
     }
     
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GrabbableObject), nameof(GrabbableObject.Start))]
+    private static void AfterStart(GrabbableObject __instance)
+    {
+        if (__instance.radarIcon != null && __instance.isInShipRoom)
+            UnityEngine.Object.Destroy(__instance.radarIcon.gameObject);
+    }
+    
     [HarmonyPrefix]
     [HarmonyPatch(typeof(NetworkBehaviour), nameof(NetworkBehaviour.OnDestroy))]
     private static void OnDestroy(NetworkBehaviour __instance)
