@@ -4,7 +4,6 @@ using BepInEx.Logging;
 using HarmonyLib;
 using TooManyItems.Dependency;
 using TooManyItems.Patches;
-using TooManyItems.Patches.Utility;
 
 namespace TooManyItems
 {
@@ -16,7 +15,7 @@ namespace TooManyItems
     {
         public const string GUID = "mattymatty.TooManyItems";
         public const string NAME = "TooManyItems";
-        public const string VERSION = "1.2.0";
+        public const string VERSION = "1.2.1";
 
         internal static ManualLogSource Log;
         
@@ -36,7 +35,7 @@ namespace TooManyItems
                         harmony.PatchAll(typeof(LimitPatcher));
                     if (!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("mattymatty.MattyFixes"))
                     {
-                        harmony.PatchAll(typeof(GrabbableObjectUtility));
+                        harmony.PatchAll(typeof(RadarPatch));
                         harmony.PatchAll(typeof(OutOfBoundsItemsFix));
                         harmony.PatchAll(typeof(RehostItemFixes));
                     }

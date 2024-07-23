@@ -4,7 +4,7 @@
         <RootNamespace>TooManyItems</RootNamespace>
         <AssemblyName>TooManyItems</AssemblyName>
         <Product>Lobby Control</Product>
-        <Version>1.2.0</Version>
+        <Version>1.3.0</Version>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>Latest</LangVersion>
     </PropertyGroup>
@@ -26,6 +26,7 @@
         <!-- clean referencing -->
         <Reference Include="$(GameDirectory)\Lethal Company_Data\Managed\UnityEngine.dll" Publicize="false"/>
         <Reference Include="$(GameDirectory)\Lethal Company_Data\Managed\UnityEngine.CoreModule.dll" Publicize="false"/>
+        <Reference Include="$(GameDirectory)\Lethal Company_Data\Managed\UnityEngine.AudioModule.dll" Publicize="false"/>
         <Reference Include="$(GameDirectory)\Lethal Company_Data\Managed\UnityEngine.PhysicsModule.dll" Publicize="false"/>
         <Reference Include="..\Dependencies\AsyncLoggers.dll" Publicize="false"/>
     </ItemGroup>

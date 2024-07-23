@@ -1,3 +1,7 @@
+## v1.3.0
+- import OutOfBounds rewrite from MattyFixes
+- add support for cruiser and add compatibility for pre-cruiser versions
+
 ## v1.2.0
 - update patches for v56
 
