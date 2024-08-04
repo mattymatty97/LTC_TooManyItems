@@ -18,7 +18,7 @@ internal class RehostItemFixes
         if (__instance is not GrabbableObject grabbable)
             return;
 
-        if (StartOfRound.Instance.localPlayerController != null)
+        if (StartOfRound.Instance.localPlayerController != null && !OutOfBoundsItemsFix.IsInitializingGame)
             return;
 
         grabbable.isInElevator = true;

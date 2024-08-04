@@ -15,7 +15,7 @@ namespace TooManyItems
     {
         public const string GUID = "mattymatty.TooManyItems";
         public const string NAME = "TooManyItems";
-        public const string VERSION = "1.2.1";
+        public const string VERSION = "1.3.1";
 
         internal static ManualLogSource Log;
         

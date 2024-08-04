@@ -1,3 +1,6 @@
+## v1.3.1
+- fix items slowly sinking into the floor on rehost
+
 ## v1.3.0
 - import OutOfBounds rewrite from MattyFixes
 - add support for cruiser and add compatibility for pre-cruiser versions

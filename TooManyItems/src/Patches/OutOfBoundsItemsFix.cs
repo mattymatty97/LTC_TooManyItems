@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,24 @@ namespace TooManyItems.Patches;
 [HarmonyPatch]
 internal class OutOfBoundsItemsFix
 {
+    internal static bool IsInitializingGame = false;
+    
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.Start))]
+    private static void MarkServerStart(StartOfRound __instance)
+    {
+        IsInitializingGame = true;
+        __instance.StartCoroutine(WaitCoupleOfFrames());
+    }
+
+    private static IEnumerator WaitCoupleOfFrames()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        IsInitializingGame = false;
+    }
+    
     [HarmonyPostfix]
     [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.LoadUnlockables))]
     private static void CorrectlyPlaceAllUnlockables(StartOfRound __instance)
@@ -105,6 +124,7 @@ internal class OutOfBoundsItemsFix
     private static Vector3 ApplyVerticalOffset(GrabbableObject grabbable, Vector3 position)
     {
         var newPos = position + Vector3.down * grabbable.itemProperties.verticalOffset;
+        newPos += Vector3.up * 0.1f;
         TooManyItems.Log.LogDebug($"{grabbable.itemProperties.itemName}({grabbable.NetworkObjectId}) fixing saved position pos:{position} newpos:{newPos}");
         return newPos;
     }
@@ -122,15 +142,11 @@ internal class OutOfBoundsItemsFix
                 return;
 
             //only run patch on join ( playerObject not yet assigned )
-            if (StartOfRound.Instance.localPlayerController != null)
+            if (StartOfRound.Instance.localPlayerController && !IsInitializingGame)
                 return;
 
             __instance.itemProperties.itemSpawnsOnGround = __instance.IsServer;
-
-            if (!__instance.IsServer)
-                return;
-
-            __instance.transform.position += Vector3.up * 0.02f;
+            
         }
 
         private static void Postfix(GrabbableObject __instance, bool __state)
