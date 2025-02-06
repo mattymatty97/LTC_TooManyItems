@@ -30,6 +30,61 @@ internal class OutOfBoundsItemsFix
         yield return new WaitForEndOfFrame();
         IsInitializingGame = false;
     }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(GrabbableObject), nameof(GrabbableObject.Start))]
+    private static IEnumerable<CodeInstruction> RedirectSpawnOnGroundCheck(IEnumerable<CodeInstruction> instructions)
+    {
+        var codes = instructions.ToList();
+
+        var itemPropertiesFld = AccessTools.Field(typeof(GrabbableObject), nameof(GrabbableObject.itemProperties));
+        var spawnsOnGroundFld = AccessTools.Field(typeof(Item), nameof(Item.itemSpawnsOnGround));
+
+        var replacementMethod = AccessTools.Method(typeof(OutOfBoundsItemsFix), nameof(NewSpawnOnGroundCheck));
+
+        var matcher = new CodeMatcher(codes);
+
+
+        matcher.MatchForward(false,
+            new CodeMatch(OpCodes.Ldarg_0),
+            new CodeMatch(OpCodes.Ldfld, itemPropertiesFld),
+            new CodeMatch(OpCodes.Ldfld, spawnsOnGroundFld),
+            new CodeMatch(OpCodes.Brfalse)
+        );
+
+        if (matcher.IsInvalid)
+        {
+            return codes;
+        }
+
+        matcher.Advance(1);
+
+        matcher.RemoveInstructions(2);
+
+        matcher.Insert(new CodeInstruction(OpCodes.Call, replacementMethod));
+
+        TooManyItems.Log.LogDebug("GrabbableObject.Start patched!");
+
+        return matcher.Instructions();
+    }
+
+    private static bool NewSpawnOnGroundCheck(GrabbableObject grabbableObject)
+    {
+        var ret = grabbableObject.itemProperties.itemSpawnsOnGround;
+
+        //if it's one of the pre-existing items
+        if (grabbableObject is ClipboardItem ||
+            (grabbableObject is PhysicsProp && grabbableObject.itemProperties.itemName == "Sticky note"))
+            return ret;
+
+        if (StartOfRound.Instance.localPlayerController && !IsInitializingGame)
+            return ret;
+
+        ret = StartOfRound.Instance.IsServer;
+
+        return ret;
+    }
+
     
     [HarmonyPostfix]
     [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.LoadUnlockables))]
@@ -41,36 +96,25 @@ internal class OutOfBoundsItemsFix
         Physics.SyncTransforms();
     }
     
-    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-    private static Collider GetVehicleCollider()
-    {
-        return Object.FindObjectOfType<VehicleController>()?.boundsCollider;
-    }
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.DespawnPropsAtEndOfRound))]
-    private static void ShipLeave(RoundManager __instance, bool despawnAllItems)
+    private static void OnShipLeave(RoundManager __instance, bool despawnAllItems)
     {
-        var objectsOfType = Object.FindObjectsOfType<GrabbableObject>();
+
+        var shipTransform = StartOfRound.Instance.elevatorTransform;
+        var grabbableObjects = shipTransform.GetComponentsInChildren<GrabbableObject>();
 
         var shipCollider = StartOfRound.Instance.shipInnerRoomBounds;
 
-        Collider vehicleCollider = null;
-        try
-        {
-            vehicleCollider = GetVehicleCollider();
-        }
-        catch (TypeLoadException)
-        {
-            //ignore for pre-cruiser compatibility
-        }
+        var miny = shipCollider.bounds.min.y;
 
-        var miny = vehicleCollider == null
-            ? shipCollider.bounds.min.y
-            : Math.Min(shipCollider.bounds.min.y, vehicleCollider.bounds.min.y);
-
-        foreach (var item in objectsOfType)
+        foreach (var item in grabbableObjects)
         {
+            if (item.NetworkObject.transform.parent != shipTransform)
+            {
+                continue;
+            }
+
             if (!item.isInShipRoom)
                 continue;
 
@@ -117,41 +161,23 @@ internal class OutOfBoundsItemsFix
         matcher.Advance(3);
         matcher.Insert(new CodeInstruction(OpCodes.Call, newOffsetMethod));
 
-        TooManyItems.Log.LogInfo("SaveItemsInShip Patched");
+        TooManyItems.Log.LogDebug("SaveItemsInShip Patched");
         return matcher.Instructions();
     }
 
     private static Vector3 ApplyVerticalOffset(GrabbableObject grabbable, Vector3 position)
     {
-        var newPos = position + Vector3.down * grabbable.itemProperties.verticalOffset;
-        newPos += Vector3.up * 0.1f;
-        TooManyItems.Log.LogDebug($"{grabbable.itemProperties.itemName}({grabbable.NetworkObjectId}) fixing saved position pos:{position} newpos:{newPos}");
+        var newPos = position;
+
+        if (grabbable.isHeld || grabbable.isHeldByEnemy)
+            return position;
+
+        if (!grabbable.hasHitGround)
+            newPos = grabbable.targetFloorPosition;
+
+        newPos += Vector3.down * grabbable.itemProperties.verticalOffset;
+        newPos += Vector3.up   * 0.01f;
+
         return newPos;
-    }
-
-    [HarmonyPatch(typeof(GrabbableObject), nameof(GrabbableObject.Start))]
-    [HarmonyPriority(Priority.Last)]
-    internal class ObjectCreationPatch
-    {
-        private static void Prefix(GrabbableObject __instance, out bool __state)
-        {
-            __state = __instance.itemProperties.itemSpawnsOnGround;
-
-            if (__instance is ClipboardItem ||
-                (__instance is PhysicsProp && __instance.itemProperties.itemName == "Sticky note"))
-                return;
-
-            //only run patch on join ( playerObject not yet assigned )
-            if (StartOfRound.Instance.localPlayerController && !IsInitializingGame)
-                return;
-
-            __instance.itemProperties.itemSpawnsOnGround = __instance.IsServer;
-            
-        }
-
-        private static void Postfix(GrabbableObject __instance, bool __state)
-        {
-            __instance.itemProperties.itemSpawnsOnGround = __state;
-        }
     }
 }

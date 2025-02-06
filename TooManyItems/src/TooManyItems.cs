@@ -15,7 +15,7 @@ namespace TooManyItems
     {
         public const string GUID = "mattymatty.TooManyItems";
         public const string NAME = "TooManyItems";
-        public const string VERSION = "1.3.1";
+        public const string VERSION = "1.4.0";
 
         internal static ManualLogSource Log;
         
@@ -26,8 +26,6 @@ namespace TooManyItems
             {
                     if (LobbyCompatibilityChecker.Enabled)
                         LobbyCompatibilityChecker.Init();
-                    if (AsyncLoggerProxy.Enabled)
-                        AsyncLoggerProxy.WriteEvent(NAME, "Awake", "Initializing");
                     
                     Log.LogInfo("Patching Methods");
                     var harmony = new Harmony(GUID);
@@ -40,14 +38,11 @@ namespace TooManyItems
                         harmony.PatchAll(typeof(RehostItemFixes));
                     }
                     Log.LogInfo(NAME + " v" + VERSION + " Loaded!");
-                    if (AsyncLoggerProxy.Enabled)
-                        AsyncLoggerProxy.WriteEvent(NAME, "Awake", "Finished Initializing");
             }
             catch (Exception ex)
             {
                 Log.LogError("Exception while initializing: \n" + ex);
             }
         }
-
     }
 }

@@ -1,3 +1,8 @@
+## v1.4.0
+- rewrite OutOfBounds patch with code from MattyFixes v2
+  - support for cruiser and BeltBag ( or anything that holds items by parenting them itself )
+  - improved lobby join detection for item positions
+
 ## v1.3.1
 - fix items slowly sinking into the floor on rehost
 

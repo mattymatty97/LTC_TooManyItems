@@ -1,6 +1,6 @@
 {
   "name": "TooManyItems",
-  "version_number": "1.3.1",
+  "version_number": "1.4.0",
   "website_url": "https://github.com/mattymatty97/LTC_TooManyItems",
   "description": "Patches for split competitive runs",
   "dependencies": [

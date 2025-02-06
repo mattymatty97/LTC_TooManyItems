@@ -17,14 +17,14 @@ namespace TooManyItems.Patches
         private static IEnumerable<CodeInstruction> PacketSizePatch(IEnumerable<CodeInstruction> instructions)
         {
             var methodInfo = typeof(NetworkBehaviour).GetMethod(nameof(NetworkBehaviour.__beginSendClientRpc), BindingFlags.Instance | BindingFlags.NonPublic);
-            var contructorInfo = typeof(FastBufferWriter).GetConstructor([typeof(int),typeof(Allocator),typeof(int)]);
+            var constructorInfo = typeof(FastBufferWriter).GetConstructor([typeof(int),typeof(Allocator),typeof(int)]);
 
             var codes = instructions.ToList();
-            
+
             var matcher = new CodeMatcher(codes);
 
             matcher.MatchForward(true, new CodeMatch(OpCodes.Call, methodInfo));
-            
+
             if (matcher.IsInvalid)
             {
                 TooManyItems.Log.LogWarning("PacketSize patch failed 1!!");
@@ -39,7 +39,7 @@ namespace TooManyItems.Patches
                 new CodeInstruction(OpCodes.Ldc_I4, 1024),
                 new CodeInstruction(OpCodes.Ldc_I4_2),
                 new CodeInstruction(OpCodes.Ldc_I4, int.MaxValue),
-                new CodeInstruction(OpCodes.Newobj, contructorInfo)
+                new CodeInstruction(OpCodes.Newobj, constructorInfo)
                 );
             
             TooManyItems.Log.LogDebug($"Patched PacketSize!");
