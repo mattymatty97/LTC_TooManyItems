@@ -95,38 +95,6 @@ internal class OutOfBoundsItemsFix
 
         Physics.SyncTransforms();
     }
-    
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(RoundManager), nameof(RoundManager.DespawnPropsAtEndOfRound))]
-    private static void OnShipLeave(RoundManager __instance, bool despawnAllItems)
-    {
-
-        var shipTransform = StartOfRound.Instance.elevatorTransform;
-        var grabbableObjects = shipTransform.GetComponentsInChildren<GrabbableObject>();
-
-        var shipCollider = StartOfRound.Instance.shipInnerRoomBounds;
-
-        var miny = shipCollider.bounds.min.y;
-
-        foreach (var item in grabbableObjects)
-        {
-            if (item.NetworkObject.transform.parent != shipTransform)
-            {
-                continue;
-            }
-
-            if (!item.isInShipRoom)
-                continue;
-
-            var transform = item.transform;
-            if (transform.position.y >= miny)
-                continue;
-
-            transform.position = shipCollider.bounds.center;
-            item.targetFloorPosition = transform.localPosition;
-            item.FallToGround();
-        }
-    }
 
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(GameNetworkManager), nameof(GameNetworkManager.SaveItemsInShip))]

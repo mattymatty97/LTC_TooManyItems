@@ -4,7 +4,7 @@
         <RootNamespace>TooManyItems</RootNamespace>
         <AssemblyName>TooManyItems</AssemblyName>
         <Product>Too Many Items</Product>
-        <Version>1.4.0</Version>
+        <Version>1.4.1</Version>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>Latest</LangVersion>

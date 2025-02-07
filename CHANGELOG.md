@@ -1,3 +1,8 @@
+## v1.4.1
+- g-bye OG OutOfBounds code
+  - as there should not be any ( non-intentional ) way for items to end up below the ship floor anymore  
+code for teleporting items back to the shipCenter have been removed
+
 ## v1.4.0
 - rewrite OutOfBounds patch with code from MattyFixes v2
   - support for cruiser and BeltBag ( or anything that holds items by parenting them itself )
